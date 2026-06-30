@@ -1164,6 +1164,7 @@ function App() {
   const [isDrawing, setIsDrawing] = useState(false)
   const [hasDrawn, setHasDrawn] = useState(false)
   const [drawingHistory, setDrawingHistory] = useState<string[]>([])
+  const [accuracyResult, setAccuracyResult] = useState<any | null>(null)
   const canvasRectRef = useRef<DOMRect | null>(null) // OPTIMASI LAG: Bounding Box Cache Ref
 
   // Vocabulary Detail Modal State
@@ -1207,6 +1208,7 @@ function App() {
         setHasDrawn(false)
         setIsDrawing(false)
         setDrawingHistory([])
+        setAccuracyResult(null)
         canvasRectRef.current = null
       }
     }
@@ -1348,6 +1350,8 @@ function App() {
       }
     }
 
+    setAccuracyResult(null)
+
     if (!target.isWord) {
       setUnlockedCards(prev => ({ ...prev, [target.id]: true }))
       setFlippedCards(prev => ({ ...prev, [target.id]: true }))
@@ -1357,6 +1361,127 @@ function App() {
       // Jika latihan kata, langsung tutup saja setelah selesai
       setWritingTarget(null)
     }
+  }
+
+  const checkDrawingAccuracy = () => {
+    if (!canvasRef.current || !writingTarget) return
+    const canvas = canvasRef.current
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    // Buat canvas offscreen untuk render template huruf asli
+    const offscreen = document.createElement('canvas')
+    offscreen.width = canvas.width
+    offscreen.height = canvas.height
+    const octx = offscreen.getContext('2d')
+    if (!octx) return
+
+    // Bersihkan offscreen dengan background hitam pekat
+    octx.fillStyle = '#000000'
+    octx.fillRect(0, 0, offscreen.width, offscreen.height)
+
+    // Render template guide warna putih pekat
+    octx.fillStyle = '#ffffff'
+    octx.textAlign = 'center'
+    octx.textBaseline = 'middle'
+
+    // Dapatkan parameter dimensi
+    const getCanvasDimensionsForAccuracy = (target: any) => {
+      if (!target.isWord) {
+        return { width: 256, height: 256, fontSizeClass: 'text-[8.5rem]', charPx: 136 }
+      }
+      const N = target.word.length
+      if (N === 2) {
+        return { width: 340, height: 256, fontSizeClass: 'text-[8.5rem]', charPx: 136 }
+      } else if (N === 3) {
+        return { width: 400, height: 256, fontSizeClass: 'text-[6.5rem]', charPx: 104 }
+      } else if (N === 4) {
+        return { width: 450, height: 256, fontSizeClass: 'text-[5.5rem]', charPx: 88 }
+      } else {
+        return { width: 460, height: 256, fontSizeClass: 'text-[4.5rem]', charPx: 72 }
+      }
+    }
+    
+    const dims = getCanvasDimensionsForAccuracy(writingTarget)
+    const canvasWidth = dims.width
+    const canvasHeight = dims.height
+    const charPx = dims.charPx
+
+    if (writingTarget.isWord) {
+      const N = writingTarget.word.length
+      let fontSize = 72
+      if (N === 2) fontSize = 136
+      else if (N === 3) fontSize = 104
+      else if (N === 4) fontSize = 88
+      
+      // Gunakan font Sans-Serif tebal
+      octx.font = `bold ${fontSize}px sans-serif`
+      writingTarget.word.split('').forEach((char: string, charIdx: number) => {
+        const P_char = (charPx / canvasWidth) * 100
+        const centerX = 50 + (charIdx - (N - 1) / 2) * P_char
+        const x = (centerX / 100) * canvasWidth
+        octx.fillText(char, x, canvasHeight / 2)
+      });
+    } else {
+      octx.font = 'bold 136px sans-serif'
+      octx.fillText(writingTarget.char, canvasWidth / 2, canvasHeight / 2)
+    }
+
+    // Bandingkan piksel
+    const userImgData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+    const templateImgData = octx.getImageData(0, 0, offscreen.width, offscreen.height)
+    
+    let userPixelCount = 0
+    let templatePixelCount = 0
+    let hitCount = 0
+    
+    const totalPixels = canvas.width * canvas.height
+    for (let i = 0; i < totalPixels; i++) {
+      const uAlpha = userImgData.data[i * 4 + 3]
+      const tRed = templateImgData.data[i * 4]
+      
+      const isUserDrawn = uAlpha > 30
+      const isTemplatePixel = tRed > 50
+      
+      if (isTemplatePixel) {
+        templatePixelCount++
+      }
+      if (isUserDrawn) {
+        userPixelCount++
+        if (isTemplatePixel) {
+          hitCount++
+        }
+      }
+    }
+
+    const accuracy = userPixelCount > 0 ? (hitCount / userPixelCount) : 0
+    const coverage = templatePixelCount > 0 ? (hitCount / templatePixelCount) : 0
+    
+    // Normalisasi cakupan agar adil (garis kuas tipis vs huruf tebal)
+    // 35% cakupan area outline tebal sudah mewakili coretan yang komplit
+    const normalizedCoverage = Math.min(1.0, coverage / 0.35)
+    
+    // Hitung skor komposit: 50% presisi (tidak keluar garis), 50% cakupan (kelengkapan huruf)
+    const score = Math.round((accuracy * 0.5 + normalizedCoverage * 0.5) * 100)
+
+    let grade = 'Coba Lagi'
+    let isCorrect = false
+
+    if (score >= 75) {
+      grade = 'Hebat'
+      isCorrect = true
+    } else if (score >= 50) {
+      grade = 'Bagus'
+      isCorrect = true
+    }
+
+    setAccuracyResult({
+      score,
+      accuracy: Math.round(accuracy * 100),
+      coverage: Math.round(normalizedCoverage * 100),
+      grade,
+      isCorrect
+    })
   }
 
   // Helper untuk mendapatkan aksara dasar (tanpa dakuon/handakuon/small kana) agar stroke markers terpetakan
@@ -2388,6 +2513,80 @@ function App() {
                     onTouchEnd={stopDrawing}
                     className="absolute inset-0 z-10 w-full h-full cursor-crosshair touch-none bg-transparent"
                   />
+
+                  {/* Accuracy Feedback Overlay */}
+                  {accuracyResult && (
+                    <div className="absolute inset-0 z-30 bg-[#080c08]/90 backdrop-blur-md rounded-2xl flex flex-col items-center justify-center p-6 text-center animate-fade-in">
+                      {accuracyResult.isCorrect ? (
+                        <div className="space-y-4">
+                          <div className="w-16 h-16 bg-jp-matcha/10 border border-jp-matcha/30 rounded-full flex items-center justify-center mx-auto text-3xl animate-bounce">
+                            {accuracyResult.grade === 'Hebat' ? '👑' : '✨'}
+                          </div>
+                          <div>
+                            <h4 className="text-lg font-bold text-white">
+                              {accuracyResult.grade === 'Hebat' ? 'Luar Biasa! (Hebat)' : 'Bagus Sekali!'}
+                            </h4>
+                            <p className="text-xs text-gray-300 mt-1">
+                              Tingkat akurasi tulisan Anda mencapai <span className="text-jp-matcha font-extrabold text-sm">{accuracyResult.score}%</span>!
+                            </p>
+                          </div>
+                          <div className="flex flex-col gap-2 w-48 mx-auto pt-2">
+                            <button
+                              onClick={handleFinishWriting}
+                              className="w-full py-2 bg-jp-matcha hover:bg-jp-matcha-hover text-white rounded-xl text-xs font-bold shadow-md transition-all duration-150 active:scale-95"
+                            >
+                              Lanjutkan & Buka
+                            </button>
+                            <button
+                              onClick={() => {
+                                setAccuracyResult(null);
+                                clearCanvas();
+                              }}
+                              className="w-full py-2 border border-white/20 text-xs font-bold text-gray-300 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-150"
+                            >
+                              Tulis Ulang (Latihan Lagi)
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="space-y-4">
+                          <div className="w-16 h-16 bg-red-500/10 border border-red-500/30 rounded-full flex items-center justify-center mx-auto text-3xl">
+                            ⚠️
+                          </div>
+                          <div>
+                            <h4 className="text-lg font-bold text-white">Kurang Presisi</h4>
+                            <p className="text-xs text-gray-300 mt-1">
+                              Skor akurasi Anda baru <span className="text-red-400 font-extrabold text-sm">{accuracyResult.score}%</span>. 
+                              Goresan kuas keluar garis atau belum menutupi sketsa.
+                            </p>
+                          </div>
+                          <div className="flex flex-col gap-2 w-48 mx-auto pt-2">
+                            <button
+                              onClick={() => setAccuracyResult(null)}
+                              className="w-full py-2 bg-white text-gray-900 hover:bg-gray-100 rounded-xl text-xs font-bold shadow-md transition-all duration-150 active:scale-95"
+                            >
+                              Perbaiki Goresan (Kembali)
+                            </button>
+                            <button
+                              onClick={() => {
+                                setAccuracyResult(null);
+                                clearCanvas();
+                              }}
+                              className="w-full py-2 border border-red-500/30 text-xs font-bold text-red-300 hover:text-white hover:bg-red-500/20 rounded-xl transition-all duration-150"
+                            >
+                              Tulis Ulang
+                            </button>
+                            <button
+                              onClick={handleFinishWriting}
+                              className="w-full py-1 text-[10px] text-gray-400 hover:text-gray-250 transition-all duration-150 underline"
+                            >
+                              Lewati & Tetap Selesai
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 {/* Controls */}
@@ -2417,7 +2616,7 @@ function App() {
                     🗑️ Hapus
                   </button>
                   <button
-                    onClick={handleFinishWriting}
+                    onClick={checkDrawingAccuracy}
                     disabled={!hasDrawn}
                     className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all duration-200 flex items-center justify-center gap-1 active:scale-95 ${
                       hasDrawn 
