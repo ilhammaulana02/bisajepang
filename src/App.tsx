@@ -1305,16 +1305,21 @@ function App() {
   ) => {
     // OPTIMASI LAG: Gunakan rect dari cache ref jika ada untuk meniadakan synchronous layouts
     const rect = canvasRectRef.current || canvas.getBoundingClientRect()
+    
+    // Hitung rasio resolusi internal canvas terhadap ukuran tampilan CSS
+    const scaleX = canvas.width / rect.width
+    const scaleY = canvas.height / rect.height
+
     if ('touches' in e) {
       if (e.touches.length === 0) return { x: 0, y: 0 }
       return {
-        x: e.touches[0].clientX - rect.left,
-        y: e.touches[0].clientY - rect.top
+        x: (e.touches[0].clientX - rect.left) * scaleX,
+        y: (e.touches[0].clientY - rect.top) * scaleY
       }
     }
     return {
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top
+      x: (e.clientX - rect.left) * scaleX,
+      y: (e.clientY - rect.top) * scaleY
     }
   }
 
@@ -2207,8 +2212,12 @@ function App() {
 
                 {/* Canvas Box Drawing Area */}
                 <div 
-                  className="relative bg-[#f8faf7] border border-gray-200 rounded-2xl overflow-hidden shadow-inner flex items-center justify-center select-none"
-                  style={{ width: `${canvasWidth}px`, height: `${canvasHeight}px` }}
+                  className="relative bg-[#f8faf7] border border-gray-200 rounded-2xl overflow-hidden shadow-inner flex items-center justify-center select-none max-w-full"
+                  style={{ 
+                    width: `${canvasWidth}px`, 
+                    height: `${canvasHeight}px`,
+                    aspectRatio: `${canvasWidth} / ${canvasHeight}`
+                  } as React.CSSProperties}
                 >
                   
                   {/* Shoji Grid Background Guides */}
