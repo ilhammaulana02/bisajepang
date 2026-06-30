@@ -1456,13 +1456,8 @@ function App() {
 
     const accuracy = userPixelCount > 0 ? (hitCount / userPixelCount) : 0
     const coverage = templatePixelCount > 0 ? (hitCount / templatePixelCount) : 0
-    
-    // Normalisasi cakupan agar adil (garis kuas tipis vs huruf tebal)
-    // 35% cakupan area outline tebal sudah mewakili coretan yang komplit
-    const normalizedCoverage = Math.min(1.0, coverage / 0.35)
-    
-    // Hitung skor komposit: 50% presisi (tidak keluar garis), 50% cakupan (kelengkapan huruf)
-    const score = Math.round((accuracy * 0.5 + normalizedCoverage * 0.5) * 100)
+    // Menggunakan akurasi presisi murni (rasio coretan di dalam sketsa) agar goresan tipis tidak terpenalti cakupan area
+    const score = Math.round(accuracy * 100)
 
     let grade = 'Coba Lagi'
     let isCorrect = false
@@ -1478,7 +1473,7 @@ function App() {
     setAccuracyResult({
       score,
       accuracy: Math.round(accuracy * 100),
-      coverage: Math.round(normalizedCoverage * 100),
+      coverage: Math.round(coverage * 100),
       grade,
       isCorrect
     })
@@ -1928,7 +1923,7 @@ function App() {
                     <div
                       key={item.id}
                       onClick={() => handleCardClick(item)}
-                      className={`h-48 cursor-pointer rounded-2xl border flex flex-col justify-between p-4.5 relative overflow-hidden shadow-sm card-hardware-accelerated ${
+                      className={`min-h-[12rem] h-auto cursor-pointer rounded-2xl border flex flex-col justify-between p-4.5 relative overflow-hidden shadow-sm card-hardware-accelerated pb-5 ${
                         isFlipped 
                           ? 'border-jp-matcha bg-jp-matcha/5 hover:border-jp-matcha' 
                           : isUnlocked
@@ -1945,6 +1940,7 @@ function App() {
                         ) : (
                           <button
                             onClick={(e) => openWritingPracticeDirectly(e, item)}
+                            onTouchStart={(e) => e.stopPropagation()}
                             className="bg-jp-matcha/10 hover:bg-jp-matcha/20 border border-jp-matcha/30 text-jp-matcha text-[8px] font-bold px-1.5 py-0.5 rounded transition-colors duration-150"
                             title="Ulang Latihan Menulis"
                           >
@@ -1971,6 +1967,7 @@ function App() {
                           {/* Tombol Lihat Contoh Kosa Kata Lainnya */}
                           <button
                             onClick={(e) => { e.stopPropagation(); setVocabTarget(item); }}
+                            onTouchStart={(e) => e.stopPropagation()}
                             className="w-full text-center py-1 bg-jp-matcha hover:bg-jp-matcha-hover text-white text-[9px] font-bold rounded-md mt-2 transition-all duration-150 shadow-sm"
                           >
                             Contoh Lainnya
@@ -2014,7 +2011,7 @@ function App() {
                     <div
                       key={item.id}
                       onClick={() => handleCardClick(item)}
-                      className={`h-48 cursor-pointer rounded-2xl border flex flex-col justify-between p-4.5 relative overflow-hidden shadow-sm card-hardware-accelerated ${
+                      className={`min-h-[12rem] h-auto cursor-pointer rounded-2xl border flex flex-col justify-between p-4.5 relative overflow-hidden shadow-sm card-hardware-accelerated pb-5 ${
                         isFlipped 
                           ? 'border-jp-matcha bg-jp-matcha/5 hover:border-jp-matcha' 
                           : isUnlocked
@@ -2031,6 +2028,7 @@ function App() {
                         ) : (
                           <button
                             onClick={(e) => openWritingPracticeDirectly(e, item)}
+                            onTouchStart={(e) => e.stopPropagation()}
                             className="bg-jp-matcha/10 hover:bg-jp-matcha/20 border border-jp-matcha/30 text-jp-matcha text-[8px] font-bold px-1.5 py-0.5 rounded transition-colors duration-150"
                             title="Ulang Latihan Menulis"
                           >
@@ -2057,6 +2055,7 @@ function App() {
                           {/* Tombol Lihat Contoh Kosa Kata Lainnya */}
                           <button
                             onClick={(e) => { e.stopPropagation(); setVocabTarget(item); }}
+                            onTouchStart={(e) => e.stopPropagation()}
                             className="w-full text-center py-1 bg-jp-matcha hover:bg-jp-matcha-hover text-white text-[9px] font-bold rounded-md mt-2 transition-all duration-150 shadow-sm"
                           >
                             Contoh Lainnya
