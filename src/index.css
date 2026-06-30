@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", "Noto Sans JP", sans-serif;
+  --font-display: "Outfit", sans-serif;
+  
+  --color-jp-matcha: #557a46;
+  --color-jp-matcha-hover: #405d33;
+  --color-jp-gold: #c28f30;
+  --color-jp-gold-hover: #a37725;
+  --color-jp-sumi: #f2f6f1;
+  --color-jp-sumi-card: #ffffff;
+  --color-jp-sumi-card-hover: #fafdfa;
+  --color-jp-tea-cream: #1e2d1a;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-jp-sumi);
+  color: var(--color-jp-tea-cream);
+  margin: 0;
+  overflow-x: hidden;
+}
+
+/* Neon Green Text Glow & Flicker Keyframes - Dioptimalkan untuk Header Hijau Gelap */
+@keyframes neon-green-flicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+    text-shadow: 
+      0 0 4px rgba(244, 243, 236, 0.9),
+      0 0 10px rgba(142, 194, 107, 0.7),
+      0 0 20px rgba(107, 142, 78, 0.9),
+      0 0 40px rgba(107, 142, 78, 1);
+  }
+  20%, 22%, 24%, 55% {
+    text-shadow: 
+      0 0 2px rgba(244, 243, 236, 0.4),
+      0 0 4px rgba(107, 142, 78, 0.4);
+  }
+}
+
+.neon-text {
+  color: #f4f3ec;
+  font-family: var(--font-display);
+  text-shadow: 
+    0 0 4px rgba(244, 243, 236, 0.9),
+    0 0 10px rgba(142, 194, 107, 0.7),
+    0 0 20px rgba(107, 142, 78, 0.9),
+    0 0 40px rgba(107, 142, 78, 1);
+  animation: neon-green-flicker 4s infinite alternate;
+}
+
+/* Akselerasi Perangkat Keras GPU untuk Kartu */
+.card-hardware-accelerated {
+  will-change: transform, background-color, border-color;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
+              background-color 0.2s ease-out, 
+              border-color 0.2s ease-out;
+}
