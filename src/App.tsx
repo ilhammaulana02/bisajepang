@@ -1686,11 +1686,11 @@ function App() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 relative z-10">
         
         {/* Navigation Tabs - Sticky top di bawah header saat di-scroll */}
-        <div className="sticky top-16 z-40 bg-[#f2f6f1]/95 backdrop-blur-md py-3.5 mb-8 flex justify-center border-b border-gray-200/40">
-          <div className="inline-flex bg-white p-1 rounded-xl border border-gray-200 shadow-sm">
+        <div className="sticky top-16 z-40 bg-[#f2f6f1]/95 backdrop-blur-md py-3.5 mb-8 flex justify-center border-b border-gray-200/40 w-full overflow-hidden px-4">
+          <div className="flex overflow-x-auto whitespace-nowrap bg-white p-1 rounded-xl border border-gray-200 shadow-sm max-w-full scrollbar-none scroll-smooth">
             <button
               onClick={() => { setActiveTab('hiragana'); setSearchQuery(''); setSelectedVowel(null); }}
-              className={`px-5 py-2 rounded-lg text-xs sm:text-sm font-bold tracking-wide transition-all duration-200 flex items-center gap-2 ${
+              className={`px-5 py-2 rounded-lg text-xs sm:text-sm font-bold tracking-wide transition-all duration-200 flex items-center gap-2 shrink-0 ${
                 activeTab === 'hiragana' 
                   ? 'bg-jp-matcha text-white shadow-sm' 
                   : 'text-gray-500 hover:text-jp-matcha'
@@ -1700,7 +1700,7 @@ function App() {
             </button>
             <button
               onClick={() => { setActiveTab('katakana'); setSearchQuery(''); setSelectedVowel(null); }}
-              className={`px-5 py-2 rounded-lg text-xs sm:text-sm font-bold tracking-wide transition-all duration-200 flex items-center gap-2 ${
+              className={`px-5 py-2 rounded-lg text-xs sm:text-sm font-bold tracking-wide transition-all duration-200 flex items-center gap-2 shrink-0 ${
                 activeTab === 'katakana' 
                   ? 'bg-jp-matcha text-white shadow-sm' 
                   : 'text-gray-500 hover:text-jp-matcha'
@@ -1710,7 +1710,7 @@ function App() {
             </button>
             <button
               onClick={() => { setActiveTab('vocabulary'); setVocabSearchQuery(''); }}
-              className={`px-5 py-2 rounded-lg text-xs sm:text-sm font-bold tracking-wide transition-all duration-200 flex items-center gap-2 ${
+              className={`px-5 py-2 rounded-lg text-xs sm:text-sm font-bold tracking-wide transition-all duration-200 flex items-center gap-2 shrink-0 ${
                 activeTab === 'vocabulary' 
                   ? 'bg-jp-matcha text-white shadow-sm' 
                   : 'text-gray-500 hover:text-jp-matcha'
@@ -1723,7 +1723,7 @@ function App() {
             </button>
             <button
               onClick={() => { setActiveTab('quiz'); setSearchQuery(''); setSelectedVowel(null); }}
-              className={`px-5 py-2 rounded-lg text-xs sm:text-sm font-bold tracking-wide transition-all duration-200 flex items-center gap-2 ${
+              className={`px-5 py-2 rounded-lg text-xs sm:text-sm font-bold tracking-wide transition-all duration-200 flex items-center gap-2 shrink-0 ${
                 activeTab === 'quiz' 
                   ? 'bg-jp-matcha text-white shadow-sm' 
                   : 'text-gray-500 hover:text-jp-matcha'
@@ -1757,31 +1757,33 @@ function App() {
 
         {/* FITUR BARU: Filter Vokal A, I, U, E, O */}
         {(activeTab === 'hiragana' || activeTab === 'katakana') && (
-          <div className="flex flex-wrap items-center justify-center gap-2 mb-10">
-            <span className="text-xs font-semibold text-gray-500 mr-2">Filter Vokal:</span>
-            <button 
-              onClick={() => setSelectedVowel(null)} 
-              className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all duration-150 shadow-sm border ${
-                selectedVowel === null 
-                  ? 'bg-jp-matcha text-white border-jp-matcha' 
-                  : 'bg-white text-[#1e2d1a] border-gray-200 hover:border-jp-matcha/50'
-              }`}
-            >
-              Semua
-            </button>
-            {['a', 'i', 'u', 'e', 'o'].map(vowel => (
+          <div className="flex items-center gap-2 mb-10 w-full overflow-hidden justify-center px-4">
+            <span className="text-xs font-semibold text-gray-500 shrink-0">Filter:</span>
+            <div className="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap scrollbar-none py-1 scroll-smooth max-w-full">
               <button 
-                key={vowel} 
-                onClick={() => setSelectedVowel(vowel)} 
-                className={`w-9 h-9 rounded-full text-xs font-bold uppercase transition-all duration-150 flex items-center justify-center shadow-sm border ${
-                  selectedVowel === vowel 
+                onClick={() => setSelectedVowel(null)} 
+                className={`px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold transition-all duration-150 shadow-xs border shrink-0 ${
+                  selectedVowel === null 
                     ? 'bg-jp-matcha text-white border-jp-matcha' 
                     : 'bg-white text-[#1e2d1a] border-gray-200 hover:border-jp-matcha/50'
                 }`}
               >
-                {vowel}
+                Semua
               </button>
-            ))}
+              {['a', 'i', 'u', 'e', 'o'].map(vowel => (
+                <button 
+                  key={vowel} 
+                  onClick={() => setSelectedVowel(vowel)} 
+                  className={`w-7.5 h-7.5 rounded-full text-[11px] sm:text-xs font-bold uppercase transition-all duration-150 flex items-center justify-center shadow-xs border shrink-0 ${
+                    selectedVowel === vowel 
+                      ? 'bg-jp-matcha text-white border-jp-matcha' 
+                      : 'bg-white text-[#1e2d1a] border-gray-200 hover:border-jp-matcha/50'
+                  }`}
+                >
+                  {vowel}
+                </button>
+              ))}
+            </div>
           </div>
         )}
 
