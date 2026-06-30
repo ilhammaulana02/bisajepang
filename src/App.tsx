@@ -2307,7 +2307,7 @@ function App() {
         const charPx = dims.charPx
 
         return (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#080c08]/80 backdrop-blur-sm animate-fade-in">
+          <div className="fixed inset-0 z-50 overflow-y-auto bg-[#080c08]/80 backdrop-blur-sm animate-fade-in p-4 flex justify-center items-start md:items-center">
             <div className={`w-full bg-white border border-gray-200 rounded-3xl p-6 shadow-2xl relative flex flex-col md:flex-row gap-6 transition-all duration-300 ${
               writingTarget.isWord ? 'max-w-5xl' : 'max-w-4xl'
             }`}>
@@ -2839,7 +2839,7 @@ function App() {
       {vocabTarget && (() => {
         const userDrawing = savedDrawings[vocabTarget.id]
         return (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#080c08]/80 backdrop-blur-sm animate-fade-in">
+          <div className="fixed inset-0 z-50 overflow-y-auto bg-[#080c08]/80 backdrop-blur-sm animate-fade-in p-4 flex justify-center items-start md:items-center">
             <div className={`w-full bg-white border border-gray-200 rounded-3xl p-6 shadow-2xl relative transition-all duration-300 ${
               userDrawing ? 'max-w-2xl' : 'max-w-md'
             }`}>
