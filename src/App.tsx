@@ -2345,20 +2345,26 @@ function App() {
                         return (
                           <div
                             key={idx}
-                            className="absolute flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/85 backdrop-blur-xs text-jp-matcha font-bold shadow-xs border border-gray-150/40 select-none h-5"
+                            className="absolute flex items-center gap-0.5 text-jp-matcha font-bold select-none pointer-events-none"
                             style={{
                               left: `${marker.x}%`,
                               top: `${marker.y}%`,
                               transform: 'translate(-50%, -50%)',
                             }}
                           >
-                            <span className="font-display font-extrabold text-[11px] leading-none">
+                            <span 
+                              className="font-display font-black text-[13px] leading-none"
+                              style={{
+                                textShadow: '0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff'
+                              }}
+                            >
                               {idx + 1}
                             </span>
                             <span 
-                              className="text-[9.5px] leading-none inline-block"
+                              className="text-[11px] leading-none inline-block"
                               style={{
                                 transform: `rotate(${angle}deg)`,
+                                textShadow: '0 0 2.5px #fff, 0 0 2.5px #fff'
                               }}
                             >
                               ➔
