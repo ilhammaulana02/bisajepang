@@ -1089,6 +1089,116 @@ const QUIZ_QUESTIONS: QuizQuestion[] = [
   }
 ]
 
+const getWordCategory = (meaning: string, _word: string, romaji: string): string => {
+  const m = meaning.toLowerCase()
+  const r = romaji.toLowerCase()
+
+
+  // 1. Hewan
+  if (
+    m.includes('anjing') || m.includes('kucing') || m.includes('burung') || m.includes('kuda') || 
+    m.includes('sapi') || m.includes('monyet') || m.includes('ikan') || m.includes('semut') || 
+    m.includes('ular') || m.includes('laba-laba') || m.includes('kelinci') || m.includes('kura-kura') || 
+    m.includes('rubah') || m.includes('rusa') || m.includes('babi') || m.includes('nyamuk') || 
+    m.includes('serangga') || m.includes('beruang') || m.includes('singa') || m.includes('gajah') ||
+    r.includes('inu') || r.includes('neko') || r.includes('tori') || r.includes('uma') || 
+    r.includes('ushi') || r.includes('saru') || r.includes('sakana') || r.includes('usagi') ||
+    r.includes('hebi') || r.includes('shika') || r.includes('kuma')
+  ) {
+    return '🦁 Hewan'
+  }
+
+  // 2. Makanan & Minuman
+  if (
+    m.includes('makanan') || m.includes('minuman') || m.includes('teh') || m.includes('nasi') || 
+    m.includes('roti') || m.includes('sushi') || m.includes('mie') || m.includes('udon') || 
+    m.includes('ramen') || m.includes('sayur') || m.includes('buah') || m.includes('apel') || 
+    m.includes('jeruk') || m.includes('pisang') || m.includes('semangka') || m.includes('anggur') || 
+    m.includes('daging') || m.includes('susu') || m.includes('air') || m.includes('kopi') || 
+    m.includes('gula') || m.includes('garam') || m.includes('sup') || m.includes('kari') || 
+    m.includes('onigiri') || m.includes('ocha') || m.includes('cokelat') || m.includes('permen') ||
+    r.includes('sushi') || r.includes('udon') || r.includes('onigiri') || r.includes('ocha') ||
+    r.includes('ramen') || r.includes('sake') || r.includes('mikan') || r.includes('ringo')
+  ) {
+    return '🍎 Makanan & Minuman'
+  }
+
+  // 3. Cuaca & Alam
+  if (
+    m.includes('cuaca') || m.includes('alam') || m.includes('langit') || m.includes('bintang') || 
+    m.includes('bulan') || m.includes('matahari') || m.includes('awan') || m.includes('hujan') || 
+    m.includes('salju') || m.includes('angin') || m.includes('petir') || m.includes('cerah') || 
+    m.includes('panas') || m.includes('sejuk') || m.includes('dunia') || m.includes('bumi') || 
+    m.includes('api') || m.includes('tanah') || m.includes('batu') || m.includes('pasir') || 
+    m.includes('daun') || m.includes('pohon') || m.includes('bunga') || m.includes('sakura') ||
+    r.includes('ame') || r.includes('yuki') || r.includes('kaze') || r.includes('sora') ||
+    r.includes('tsuki') || r.includes('hoshi') || r.includes('sakura') || r.includes('kumo')
+  ) {
+    return '⛅ Cuaca & Alam'
+  }
+
+  // 4. Tempat & Bangunan
+  if (
+    m.includes('tempat') || m.includes('bangunan') || m.includes('rumah') || m.includes('toko') || 
+    m.includes('stasiun') || m.includes('sekolah') || m.includes('kelas') || m.includes('kantor') || 
+    m.includes('kamar') || m.includes('dapur') || m.includes('toilet') || m.includes('halaman') || 
+    m.includes('taman') || m.includes('gunung') || m.includes('sungai') || m.includes('laut') || 
+    m.includes('pantai') || m.includes('kota') || m.includes('desa') || m.includes('negara') || 
+    m.includes('jalan') || m.includes('jembatan') || m.includes('bandara') || m.includes('rumah sakit') || 
+    m.includes('perpustakaan') || m.includes('bank') || m.includes('hotel') || m.includes('restoran') || 
+    m.includes('kuil') || m.includes('hutan') || r.includes('eki') || r.includes('ie') || 
+    r.includes('machi') || r.includes('yama') || r.includes('kawa') || r.includes('umi') ||
+    r.includes('heya') || r.includes('mise') || r.includes('mori') || r.includes('niwa')
+  ) {
+    return '🏠 Tempat & Bangunan'
+  }
+
+  // 5. Benda & Peralatan
+  if (
+    m.includes('buku') || m.includes('pulpen') || m.includes('pensil') || m.includes('penghapus') || 
+    m.includes('tas') || m.includes('meja') || m.includes('kursi') || m.includes('pintu') || 
+    m.includes('jendela') || m.includes('kunci') || m.includes('telepon') || m.includes('hp') || 
+    m.includes('komputer') || m.includes('tv') || m.includes('jam') || m.includes('payung') || 
+    m.includes('sepatu') || m.includes('baju') || m.includes('celana') || m.includes('topi') || 
+    m.includes('kacamata') || m.includes('dompet') || m.includes('uang') || m.includes('mobil') || 
+    m.includes('sepeda') || m.includes('kereta') || m.includes('pesawat') || m.includes('mainan') || 
+    m.includes('kamera') || m.includes('sabun') || m.includes('handuk') ||
+    r.includes('hon') || r.includes('enpitsu') || r.includes('saifu') || r.includes('kasa') ||
+    r.includes('kaban') || r.includes('kagi') || r.includes('kuruma') || r.includes('kutsu')
+  ) {
+    return '🎒 Benda & Peralatan'
+  }
+
+  // 6. Anggota Tubuh
+  if (
+    m.includes('kepala') || m.includes('rambut') || m.includes('mata') || m.includes('telinga') || 
+    m.includes('hidung') || m.includes('mulut') || m.includes('gigi') || m.includes('leher') || 
+    m.includes('tangan') || m.includes('jari') || m.includes('kaki') || m.includes('perut') || 
+    r.includes('me') || r.includes('mimi') || r.includes('hana') || r.includes('kuchi') || 
+    r.includes('te') || r.includes('ashi') || r.includes('atama') || r.includes('kubi')
+  ) {
+    return '💪 Anggota Tubuh'
+  }
+
+  // 7. Kata Sifat & Kerja
+  if (
+    m.includes('menulis') || m.includes('membaca') || m.includes('berbicara') || m.includes('mendengar') || 
+    m.includes('melihat') || m.includes('makan') || m.includes('minum') || m.includes('pergi') || 
+    m.includes('tidur') || m.includes('senang') || m.includes('sedih') || m.includes('panas') || 
+    m.includes('dingin') || m.includes('besar') || m.includes('kecil') || m.includes('tinggi') || 
+    m.includes('panjang') || m.includes('cepat') || m.includes('baru') || m.includes('mahal') || 
+    m.includes('murah') || m.includes('merah') || m.includes('biru') || m.includes('kuning') || 
+    m.includes('hijau') || m.includes('hitam') || m.includes('putih') ||
+    r.includes('aka') || r.includes('ao') || r.includes('shiro') || r.includes('kuro') ||
+    r.includes('kiiro') || r.includes('oishii') || r.includes('samui') || r.includes('atsui')
+  ) {
+    return '✏️ Kata Kerja & Sifat'
+  }
+
+  return '📌 Lain-lain'
+}
+
+
 function App() {
   const [activeTab, setActiveTab] = useState<'hiragana' | 'katakana' | 'vocabulary' | 'quiz'>('hiragana')
   const [searchQuery, setSearchQuery] = useState('')
@@ -1096,6 +1206,7 @@ function App() {
   const [flippedCards, setFlippedCards] = useState<Record<string, boolean>>({})
   const [unlockedCards, setUnlockedCards] = useState<Record<string, boolean>>({})
   const [savedDrawings, setSavedDrawings] = useState<Record<string, string>>({})
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
 
   // Vocabulary Tab Search State & Memo
   const [vocabSearchQuery, setVocabSearchQuery] = useState('')
@@ -1141,16 +1252,27 @@ function App() {
 
   const filteredVocabList = useMemo(() => {
     return allVocabList.filter(item => {
-      if (!vocabSearchQuery) return true
-      const q = vocabSearchQuery.toLowerCase().trim()
-      return (
-        item.word.toLowerCase().includes(q) ||
-        item.romaji.toLowerCase().includes(q) ||
-        item.meaning.toLowerCase().includes(q) ||
-        item.char.toLowerCase().includes(q)
-      )
+      // 1. Search Filter
+      if (vocabSearchQuery) {
+        const q = vocabSearchQuery.toLowerCase().trim()
+        const matchesSearch = (
+          item.word.toLowerCase().includes(q) ||
+          item.romaji.toLowerCase().includes(q) ||
+          item.meaning.toLowerCase().includes(q) ||
+          item.char.toLowerCase().includes(q)
+        )
+        if (!matchesSearch) return false
+      }
+      
+      // 2. Category Filter
+      if (selectedCategory) {
+        const cat = getWordCategory(item.meaning, item.word, item.romaji)
+        if (cat !== selectedCategory) return false
+      }
+
+      return true
     })
-  }, [allVocabList, vocabSearchQuery])
+  }, [allVocabList, vocabSearchQuery, selectedCategory])
 
   // Quiz State
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0)
@@ -1857,7 +1979,7 @@ function App() {
               <span className="font-sans font-bold text-sm">ア</span> Katakana
             </button>
             <button
-              onClick={() => { setActiveTab('vocabulary'); setVocabSearchQuery(''); }}
+              onClick={() => { setActiveTab('vocabulary'); setVocabSearchQuery(''); setSelectedCategory(null); }}
               className={`px-5 py-2 rounded-lg text-xs sm:text-sm font-bold tracking-wide transition-all duration-200 flex items-center gap-2 shrink-0 ${
                 activeTab === 'vocabulary' 
                   ? 'bg-jp-matcha text-white shadow-sm' 
@@ -2130,65 +2252,120 @@ function App() {
               />
             </div>
 
-            {/* List of Vocabulary */}
+            {/* Category Filter Pills */}
+            <div className="flex items-center gap-2 mb-6 w-full overflow-hidden justify-center px-4">
+              <span className="text-xs font-semibold text-gray-500 shrink-0">Kategori:</span>
+              <div className="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap scrollbar-none py-1 scroll-smooth max-w-full">
+                <button
+                  onClick={() => setSelectedCategory(null)}
+                  className={`px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold transition-all duration-150 shadow-xs border shrink-0 ${
+                    selectedCategory === null
+                      ? 'bg-jp-matcha text-white border-jp-matcha'
+                      : 'bg-white text-[#1e2d1a] border-gray-200 hover:border-jp-matcha/50'
+                  }`}
+                >
+                  Semua (${allVocabList.length})
+                </button>
+                {Array.from(new Set(allVocabList.map(item => getWordCategory(item.meaning, item.word, item.romaji)))).sort().map(cat => {
+                  const count = allVocabList.filter(item => getWordCategory(item.meaning, item.word, item.romaji) === cat).length;
+                  return (
+                    <button
+                      key={cat}
+                      onClick={() => setSelectedCategory(cat)}
+                      className={`px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold transition-all duration-150 shadow-xs border shrink-0 ${
+                        selectedCategory === cat
+                          ? 'bg-jp-matcha text-white border-jp-matcha'
+                          : 'bg-white text-[#1e2d1a] border-gray-200 hover:border-jp-matcha/50'
+                      }`}
+                    >
+                      ${cat} (${count})
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* List of Vocabulary Grouped by Category */}
             {filteredVocabList.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-gray-500">Kosa kata tidak ditemukan.</p>
               </div>
-            ) : (
-              <div className="space-y-3 animate-fade-in">
-                {filteredVocabList.map((item, idx) => {
-                  const cleanWord = item.word.split(' ')[0] || item.word
-                  const userWordDrawing = savedDrawings[`word-${cleanWord}`]
+            ) : (() => {
+              // Group vocabs dynamically
+              const groups: Record<string, typeof filteredVocabList> = {};
+              filteredVocabList.forEach(item => {
+                const cat = getWordCategory(item.meaning, item.word, item.romaji);
+                if (!groups[cat]) groups[cat] = [];
+                groups[cat].push(item);
+              });
 
-                  return (
-                    <div 
-                      key={idx}
-                      onClick={() => handleStartWordWriting(item.word, item.romaji, item.meaning)}
-                      className="bg-white border border-gray-200/80 p-4.5 rounded-2xl shadow-sm hover:border-jp-matcha/50 transition-all duration-150 cursor-pointer hover:shadow-md group flex items-center justify-between gap-4"
-                      title="Klik untuk langsung mencoba menulis kosa kata ini"
-                    >
-                      <div className="flex items-center gap-4 flex-1">
-                        {/* Character Badge */}
-                        <div className="bg-jp-matcha/10 text-jp-matcha text-[10px] font-bold px-2.5 py-1.5 rounded-xl font-mono group-hover:bg-jp-matcha group-hover:text-white transition-colors duration-150 shrink-0">
-                          {item.char} ({item.charType})
-                        </div>
-                        
-                        {/* Word Details */}
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 flex-1">
-                          <span className="text-base font-bold text-jp-tea-cream">{item.word}</span>
-                          <span className="text-xs text-gray-500 font-medium">Lafal: {item.romaji}</span>
-                          <span className="text-xs font-bold text-jp-matcha bg-jp-matcha/5 border border-jp-matcha/10 px-2 py-0.5 rounded-md group-hover:bg-jp-matcha/10 transition-colors duration-150 w-fit">
-                            {item.meaning}
-                          </span>
-                        </div>
-                      </div>
-                      
-                      {/* Right Section: Coretan & Status */}
-                      <div className="flex items-center gap-3 shrink-0">
-                        {/* Menampilkan coretan kata hasil latihan pengguna */}
-                        {userWordDrawing && (
-                          <div className="relative w-11 h-11 bg-[#f8faf7] border border-gray-200 rounded-lg overflow-hidden shadow-inner flex items-center justify-center select-none">
-                            <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800d_1px,transparent_1px),linear-gradient(to_bottom,#8080800d_1px,transparent_1px)] bg-[size:6px_6px] pointer-events-none"></div>
-                            <img src={userWordDrawing} alt="Coretan Kata Anda" className="w-full h-full object-contain relative z-10 pointer-events-none" />
-                          </div>
-                        )}
-                        
-                        {userWordDrawing ? (
-                          <span className="text-[9px] text-[#405d33] bg-[#557a46]/10 px-2.5 py-1 rounded-full font-bold flex items-center gap-1">
-                            ✍️ Sudah Ditulis
-                          </span>
-                        ) : (
-                          <span className="text-[9px] text-gray-400 bg-gray-100 px-2.5 py-1 rounded-full font-bold font-sans">
-                            Coba Tulis
-                          </span>
-                        )}
+              return (
+                <div className="space-y-8 animate-fade-in">
+                  {Object.entries(groups).sort().map(([category, items]) => {
+                    const itemsList = items as typeof filteredVocabList;
+                    return (
+                      <div key={category} className="border border-gray-150/40 bg-gray-50/20 p-4 sm:p-5 rounded-2xl">
+                        <h3 className="text-xs sm:text-sm font-bold text-jp-matcha bg-jp-matcha/5 border border-jp-matcha/10 px-3 py-1.5 rounded-xl w-fit mb-4">
+                          {category} ({itemsList.length} Kata)
+                        </h3>
+                        <div className="space-y-3">
+                          {itemsList.map((item, idx) => {
+                          const cleanWord = item.word.split(' ')[0] || item.word
+                          const userWordDrawing = savedDrawings[`word-${cleanWord}`]
+
+                          return (
+                            <div 
+                              key={idx}
+                              onClick={() => handleStartWordWriting(item.word, item.romaji, item.meaning)}
+                              className="bg-white border border-gray-200/80 p-4.5 rounded-2xl shadow-sm hover:border-jp-matcha/50 transition-all duration-150 cursor-pointer hover:shadow-md group flex items-center justify-between gap-4"
+                              title="Klik untuk langsung mencoba menulis kosa kata ini"
+                            >
+                              <div className="flex items-center gap-4 flex-1">
+                                {/* Character Badge */}
+                                <div className="bg-jp-matcha/10 text-jp-matcha text-[10px] font-bold px-2.5 py-1.5 rounded-xl font-mono group-hover:bg-jp-matcha group-hover:text-white transition-colors duration-150 shrink-0">
+                                  {item.char} ({item.charType})
+                                </div>
+                                
+                                {/* Word Details */}
+                                <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 flex-1">
+                                  <span className="text-base font-bold text-jp-tea-cream">{item.word}</span>
+                                  <span className="text-xs text-gray-500 font-medium">Lafal: {item.romaji}</span>
+                                  <span className="text-xs font-bold text-jp-matcha bg-jp-matcha/5 border border-jp-matcha/10 px-2 py-0.5 rounded-md group-hover:bg-jp-matcha/10 transition-colors duration-150 w-fit">
+                                    {item.meaning}
+                                  </span>
+                                </div>
+                              </div>
+
+                              {/* Right Section: Coretan & Status */}
+                              <div className="flex items-center gap-3 shrink-0">
+                                {/* Menampilkan coretan kata hasil latihan pengguna */}
+                                {userWordDrawing && (
+                                  <div className="relative w-11 h-11 bg-[#f8faf7] border border-gray-200 rounded-lg overflow-hidden shadow-inner flex items-center justify-center select-none">
+                                    <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800d_1px,transparent_1px),linear-gradient(to_bottom,#8080800d_1px,transparent_1px)] bg-[size:6px_6px] pointer-events-none"></div>
+                                    <img src={userWordDrawing} alt="Coretan Kata Anda" className="w-full h-full object-contain relative z-10 pointer-events-none" />
+                                  </div>
+                                )}
+                                
+                                {userWordDrawing ? (
+                                  <span className="text-[9px] text-[#405d33] bg-[#557a46]/10 px-2.5 py-1 rounded-full font-bold flex items-center gap-1">
+                                    ✍️ Sudah Ditulis
+                                  </span>
+                                ) : (
+                                  <span className="text-[9px] text-gray-400 bg-gray-100 px-2.5 py-1 rounded-full font-bold font-sans">
+                                    Coba Tulis
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          )
+                        })}
                       </div>
                     </div>
-                  )
-                })}
-              </div>
-            )}
+                    );
+                  })}
+                </div>
+              );
+            })()}
           </div>
         )}
 
