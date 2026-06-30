@@ -1427,36 +1427,64 @@ function App() {
       octx.fillText(writingTarget.char, canvasWidth / 2, canvasHeight / 2)
     }
 
-    // Bandingkan piksel
+    // Bandingkan piksel dengan toleransi jarak (soft margin) untuk mendeteksi keluar garis sedikit vs keluar garis jauh
     const userImgData = ctx.getImageData(0, 0, canvas.width, canvas.height)
     const templateImgData = octx.getImageData(0, 0, offscreen.width, offscreen.height)
     
     let userPixelCount = 0
-    let templatePixelCount = 0
-    let hitCount = 0
+    let weightedHitScore = 0
+    const w = canvas.width
+    const h = canvas.height
     
-    const totalPixels = canvas.width * canvas.height
+    const totalPixels = w * h
     for (let i = 0; i < totalPixels; i++) {
       const uAlpha = userImgData.data[i * 4 + 3]
-      const tRed = templateImgData.data[i * 4]
-      
       const isUserDrawn = uAlpha > 30
-      const isTemplatePixel = tRed > 50
       
-      if (isTemplatePixel) {
-        templatePixelCount++
-      }
       if (isUserDrawn) {
         userPixelCount++
+        
+        const x = i % w
+        const y = Math.floor(i / w)
+        const tRed = templateImgData.data[i * 4]
+        const isTemplatePixel = tRed > 50
+        
         if (isTemplatePixel) {
-          hitCount++
+          // Direct hit: didalam sketsa (100% nilai)
+          weightedHitScore += 1.0
+        } else {
+          // Cek area sekitar (radius 4 pixel) untuk deteksi "keluar garis sedikit"
+          let isNear = false
+          const radius = 4
+          const startX = Math.max(0, x - radius)
+          const endX = Math.min(w - 1, x + radius)
+          const startY = Math.max(0, y - radius)
+          const endY = Math.min(h - 1, y + radius)
+          
+          for (let ny = startY; ny <= endY; ny++) {
+            for (let nx = startX; nx <= endX; nx++) {
+              const nIdx = (ny * w + nx) * 4
+              if (templateImgData.data[nIdx] > 50) {
+                isNear = true
+                break
+              }
+            }
+            if (isNear) break
+          }
+          
+          if (isNear) {
+            // Keluar garis sedikit: penalti tipis (90% nilai tetap didapat)
+            weightedHitScore += 0.90
+          } else {
+            // Keluar terlalu jauh: penalti penuh (0% nilai)
+            weightedHitScore += 0.0
+          }
         }
       }
     }
 
-    const accuracy = userPixelCount > 0 ? (hitCount / userPixelCount) : 0
-    const coverage = templatePixelCount > 0 ? (hitCount / templatePixelCount) : 0
-    // Menggunakan akurasi presisi murni (rasio coretan di dalam sketsa) agar goresan tipis tidak terpenalti cakupan area
+    const accuracy = userPixelCount > 0 ? (weightedHitScore / userPixelCount) : 0
+    // Menggunakan akurasi presisi murni dengan toleransi soft margin agar tulisan tipis yang presisi mendapat nilai tinggi
     const score = Math.round(accuracy * 100)
 
     let grade = 'Coba Lagi'
@@ -1473,7 +1501,7 @@ function App() {
     setAccuracyResult({
       score,
       accuracy: Math.round(accuracy * 100),
-      coverage: Math.round(coverage * 100),
+      coverage: 0, // Tidak menggunakan penalti cakupan area luar
       grade,
       isCorrect
     })
