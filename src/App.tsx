@@ -1510,7 +1510,7 @@ function App() {
     // Dapatkan parameter dimensi
     const getCanvasDimensionsForAccuracy = (target: any) => {
       if (!target.isWord) {
-        return { width: 256, height: 256, fontSizeClass: 'text-[8.5rem]', charPx: 136 }
+        return { width: 380, height: 380, fontSizeClass: 'text-[15rem]', charPx: 240 }
       }
       const N = target.word.length
       if (N === 2) {
@@ -1545,7 +1545,7 @@ function App() {
         octx.fillText(char, x, canvasHeight / 2)
       });
     } else {
-      octx.font = 'bold 136px sans-serif'
+      octx.font = 'bold 240px sans-serif'
       octx.fillText(writingTarget.char, canvasWidth / 2, canvasHeight / 2)
     }
 
@@ -2491,7 +2491,7 @@ function App() {
       {/* MODAL MODUL LATIHAN MENULIS DENGAN PENANDA VISUAL ABSOLUT & BEBAS LAG */}
       {writingTarget && (() => {
         const getCanvasDimensions = (target: any) => {
-          if (!target || !target.isWord) return { width: 256, height: 256, fontSizeClass: 'text-[10rem]', charPx: 160 }
+          if (!target || !target.isWord) return { width: 380, height: 380, fontSizeClass: 'text-[15rem]', charPx: 240 }
           
           const N = target.word.length
           if (N === 2) {
